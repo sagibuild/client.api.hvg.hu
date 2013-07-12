@@ -1,0 +1,162 @@
+#rovat .article {
+	border-bottom-color: rgb(231, 231, 231);
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	color: rgb(44, 44, 44);
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	min-height: 76px;
+	line-height: normal;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	padding-bottom: 15px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 10px;
+	width: 100%;
+}
+
+#rovat .article h3{
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+	width: 100%;
+}
+
+#rovat .article h3 a{
+	color: rgb(0, 66, 118);
+	cursor: auto;
+	display: inline;
+	font-family: Arial, Helvetica, sans-serif;
+	height: auto;
+	outline-color: rgb(0, 66, 118);
+	outline-style: none;
+	outline-width: 0px;
+	text-decoration: none;
+	width: auto;
+}
+
+#rovat .article a{
+	color: rgb(0, 66, 118);
+	cursor: auto;
+	display: inline;
+	height: auto;
+	line-height: normal;
+	outline-color: rgb(0, 66, 118);
+	outline-style: none;
+	outline-width: 0px;
+	text-decoration: none;
+	/*width: auto;*/
+}
+
+#rovat .article a img{
+-webkit-background-clip: border-box;
+-webkit-background-origin: padding-box;
+-webkit-background-size: auto;
+background-attachment: scroll;
+background-clip: border-box;
+background-color: rgb(255, 255, 255);
+background-image: none;
+background-origin: padding-box;
+background-size: auto;
+border-bottom-color: rgb(231, 231, 231);
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-image-outset: 0px;
+border-image-repeat: stretch;
+border-image-slice: 100%;
+border-image-source: none;
+border-image-width: 1;
+border-left-color: rgb(231, 231, 231);
+border-left-style: solid;
+border-left-width: 1px;
+border-right-color: rgb(231, 231, 231);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(231, 231, 231);
+border-top-style: solid;
+border-top-width: 1px;
+color: rgb(0, 66, 118);
+cursor: auto;
+display: block;
+float: left;
+/*height: 171px;*/
+line-height: normal;
+margin-bottom: 5px;
+margin-left: 10px;
+margin-right: 10px;
+margin-top: 5px;
+padding: 3px;
+vertical-align: top;
+/*width: 261px;*/
+}
+
+#rovat .article p{
+	line-height: 18px;
+	margin: 10px;
+}
+
+#rovat .article p.columnarticleinfo{
+	color: rgb(154, 154, 154);
+	font-size: 11px;
+	font-weight: bold;
+	height: 18px;
+	line-height: 18px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 0px;
+	width: 100%;
+}
+
+#rovat .article p.columnarticleinfo a{
+	color: rgb(154, 154, 154);
+	cursor: auto;
+	float: right;
+	height: 18px;
+	line-height: 18px;
+	outline-color: rgb(154, 154, 154);
+	outline-style: none;
+	outline-width: 0px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+	padding-right: 0px;
+	padding-top: 0px;
+	text-decoration: none;
+	min-width: 73px;
+}
+
+#rovat .article p.columnarticleinfo a img{
+	border-color: rgb(154, 154, 154);
+	border-style: none;
+	border-bottom-width: 0px;
+	border-image-outset: 0px;
+	border-image-repeat: stretch;
+	border-image-slice: 100%;
+	border-image-source: none;
+	border-image-width: 1;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	border-top-width: 0px;
+	color: rgb(154, 154, 154);
+	cursor: auto;
+	display: inline;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	height: 16px;
+	line-height: 18px;
+	vertical-align: text-bottom;
+	width: 15px;
+	zoom: 1;
+}
