@@ -1,7 +1,3 @@
-function localDateTime(input){
-	return input.replace("T"," ").replace(/-/g,'. ');
-}
-
 $('#btn-popup').bind('click', function(event, ui) {
   $('#api-url').html(apiUrl);
 });
@@ -29,19 +25,33 @@ function renderArticle(article){
 	return ret;
 }
 
+function loadColumnLatestContent(data){
+	if (isEmpty(data)){
+		console.log('empty data');
+		return;
+	}
+	
+	var columnContent = $('#rovat .content');
+	$.each(data, function(index, item) {
+		columnContent.append(renderArticle(item));
+	});
+	
+	Storage.setItem('vilag',JSON.stringify(data));
+}
+
 function loadColumnLatest(column){
 	var url = apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';  
-	$.getJSON(url, function() {
-		console.log( "success" );
-	})
-	.done(function(data) { 
-		var columnContent = $('#rovat .content');
-		$.each(data, function(index, item) {
-			columnContent.append(renderArticle(item));
-		});
-		
-		console.log( "second success" ); 
-		})
+
+	// load from cache
+	if (Storage.isEnabled){
+		var cache = Storage.getItem('vilag');
+		if (!isEmpty(cache)){
+			loadColumnLatestContent(JSON.parse(cache));
+		}
+	}
+
+	$.getJSON(url, function() { console.log( "success" ); })
+	.done(function(data) { loadColumnLatestContent(data); })
 	.fail(function() { console.log( "error" ); })
 	.always(function() { console.log( "complete" ); });
 }

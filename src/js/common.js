@@ -1,0 +1,51 @@
+// NOTE: this file dont contain jquery or another Javascript framework function
+
+// Local Storage
+var Storage = new function() {
+	// Current browser has local storage feature
+	this.isEnabled = function() {
+		try {
+			return 'localStorage' in window && window['localStorage'] !== null;
+		} catch (e) {
+			return false;
+		}
+	}
+	
+	// return an element from storage
+	this.getItem = function(key){
+		if (!this.isEnabled()){ return undefined; }
+		return localStorage[key];
+	}
+	
+	// set an element to storage
+	this.setItem = function(key, value){
+		if (!this.isEnabled()){ return; }
+		localStorage[key] = value;
+	}
+	
+	// remove an elment from strorage
+	this.removeItem = function(key) {
+		if (!this.isEnabled()){ return; }
+		localStorage.removeItem(key);
+	}
+	
+	// clear storage
+	this.clear = function(){
+		if (!this.isEnabled()){ return; }
+		localStorage.clear(); 
+	}
+};
+
+// Current value is empty
+function isEmpty(value){
+	if (value == null || value == undefined || value == 'undefined'){
+		return true;
+	}
+	
+	return false;
+}
+
+// Datetime helper
+function localDateTime(input){
+	return input.replace("T"," ").replace(/-/g,'. ');
+}
