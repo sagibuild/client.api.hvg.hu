@@ -17,7 +17,7 @@ var apiKey = '';
 apiUrl = protocol + '://' + baseUrl + '/' + apiVersion + '/' + appVersion + '/';
 
 // Site url
-var siteUrl = 'me.hvg.hu'
+var siteUrl = 'm.hvg.hu/app'
 
 // Get site column url
 function siteColumnUrl(columnWebId){
