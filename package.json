@@ -1,0 +1,7 @@
+{
+  "author": "Richard Kundl <kundl.richard+travis@gmail.com> (http://richardkundl.tumblr.com/)",
+  "name": "client.api.hvg.hu",
+  "description": "Test client app for hvg.hu web api.",
+  "main" : "src/js/scripts.js",
+  "version" : "0.0.2"
+}
