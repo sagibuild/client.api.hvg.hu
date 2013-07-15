@@ -60,6 +60,7 @@ function loadColumn(name) {
 	var url = apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey;  
 	$.getJSON(url, function() {
 		console.log( "success" );
+		//$.ajaxSetup({ cache: false });
 	})
 	.done(function(data) { 
 		$('#rovat h1').text(data.Name);
