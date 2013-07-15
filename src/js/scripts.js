@@ -1,11 +1,21 @@
+// Column API url
+var columnUrl = function(name) { return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey; }
+
+// Column latest articles API url
+var articleLatestUrl = function(column) { return  apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0'; }
+
+// Custom bind to popup button
 $('#btn-popup').bind('click', function(event, ui) {
   $('#api-url').html(apiUrl);
 });
 
+// Custom bind to open "Világ" column button
 $('#btn-rovat').bind('click', function(event, ui) {
   loadColumn('vilag');
 });
 
+// Render article body
+// TODO: Make a handlebarsjs remplate
 function renderArticle(article){
 	var caption = '<h3><a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
 	var image = '';
@@ -25,22 +35,25 @@ function renderArticle(article){
 	return ret;
 }
 
+// Load column latest article data to page
 function loadColumnLatestContent(data){
 	if (isEmpty(data)){
 		console.log('empty data');
 		return;
 	}
-	
+
 	var columnContent = $('#rovat .content');
 	$.each(data, function(index, item) {
 		columnContent.append(renderArticle(item));
 	});
-	
+
+    // save to storage
 	Storage.setItem('vilag',JSON.stringify(data));
 }
 
+// Load column latest data
 function loadColumnLatest(column){
-	var url = apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';  
+	var url = articleLatestUrl(column);
 
 	// load from cache
 	if (Storage.isEnabled){
@@ -50,23 +63,34 @@ function loadColumnLatest(column){
 		}
 	}
 
+    // get data
 	$.getJSON(url, function() { console.log( "success" ); })
 	.done(function(data) { loadColumnLatestContent(data); })
 	.fail(function() { console.log( "error" ); })
 	.always(function() { console.log( "complete" ); });
 }
 
+// Load column data to page
+function loadColumnContent(data){
+    $('#rovat h1').text(data.Name);
+    loadColumnLatest(data.WebId);
+}
+
+// Load column data
 function loadColumn(name) {
-	var url = apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey;  
-	$.getJSON(url, function() {
-		console.log( "success" );
-		//$.ajaxSetup({ cache: false });
-	})
-	.done(function(data) { 
-		$('#rovat h1').text(data.Name);
-		loadColumnLatest(data.WebId);
-		console.log( "second success" ); 
-		})
+	var url = columnUrl(name);
+
+    // load from cache
+    if (Storage.isEnabled){
+        var cache = Storage.getItem('vilag-rovat');
+        if (!isEmpty(cache)){
+            loadColumnContent(JSON.parse(cache));
+        }
+    }
+
+    // get data
+	$.getJSON(url, function() {	console.log( "success" ); })
+	.done(function(data) { loadColumnContent(data); })
 	.fail(function() { console.log( "error" ); })
 	.always(function() { console.log( "complete" ); });
 }
