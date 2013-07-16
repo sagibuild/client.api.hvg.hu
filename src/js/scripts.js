@@ -43,10 +43,12 @@ function loadColumnLatestContent(data){
 	}
 
 	var columnContent = $('#rovat .content');
+	var articles = '';
 	$.each(data, function(index, item) {
-		columnContent.append(renderArticle(item));
+		articles = articles + renderArticle(item);
 	});
-
+	columnContent.html(articles);
+	
     // save to storage
 	Storage.setItem('vilag',JSON.stringify(data));
 }
