@@ -1,8 +1,13 @@
 language: node_js
 node_js:
-   - "0.8"
-   - "0.6"
-
+   - "0.10"
 
 after_success:
-  - git commit -a -m "Committed by Travis-CI build number: $TRAVIS_JOB_ID"
+  - git clone https://github.com/richardkundl/client.api.hvg.hu.git
+  #- cd src
+  #- git pull source master
+  #- git add .
+  - BUILD_NBR=$((TRAVIS_JOB_ID - 1))
+  - echo "Build Number > '${BUILD_NBR}'"
+  - git commit -a -m "Committed by Travis-CI (build number - ${BUILD_NBR})"
+  #- git push --repo https://floydpink-public:Public-FloydPink@github.com/FloydPink-Public/spinach-android.git

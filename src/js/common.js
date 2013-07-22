@@ -38,7 +38,7 @@ var Storage = new function() {
 
 // Current value is empty
 function isEmpty(value){
-	if (value == null || value == undefined || value == 'undefined'){
+	if (value == null || value == undefined || value == 'undefined' || value.length == 0){
 		return true;
 	}
 	
