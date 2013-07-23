@@ -1,3 +1,9 @@
+// Current Application instance
+var app = function() {
+    // Selected column WebId
+    this.prototype.Column = '';
+}
+
 // Column API url
 var columnUrl = function(name) { return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey; }
 
@@ -10,8 +16,20 @@ $('#btn-popup').bind('click', function(event, ui) {
 });
 
 // Custom bind to open "Világ" column button
-$('#btn-rovat').bind('click', function(event, ui) {
-  loadColumn('vilag');
+$('#btn-vilag').bind('click', function(event, ui) {
+    app.Column = 'vilag';
+    loadColumn();
+});
+
+// Custom bind to open "Tudomány" column button
+$('#btn-tudomany').bind('click', function(event, ui) {
+    app.Column = 'tudomany';
+    loadColumn();
+});
+
+// Custom bind to 'rovat' Back bind
+$('#rovat a[name=back]').bind('click', function(event, ui){
+   app.Column = '';
 });
 
 // Render article body
@@ -19,7 +37,7 @@ $('#btn-rovat').bind('click', function(event, ui) {
 function renderArticle(article){
 	var caption = '<h3><a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
 	var image = '';
-	if (article.DefaultImageId != '00000000-0000-0000-0000-000000000000'){
+	if (!isEmpty(article.DefaultImageId)){
 		image = '<a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
 				+ '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">'
 				+ '</a>';
@@ -66,10 +84,10 @@ function loadColumnLatest(column){
 	}
 
     // get data
-	$.getJSON(url, function() { console.log( "success" ); })
+	$.getJSON(url, function() { console.log('success'); })
 	.done(function(data) { loadColumnLatestContent(data); })
-	.fail(function() { console.log( "error" ); })
-	.always(function() { console.log( "complete" ); });
+	.fail(function() { console.log('error'); })
+	.always(function() { console.log('complete'); });
 }
 
 // Load column data to page
@@ -78,8 +96,8 @@ function loadColumnContent(data){
 }
 
 // Load column data
-function loadColumn(name) {
-	var url = columnUrl(name);
+function loadColumn() {
+	var url = columnUrl(app.Column);
 
     // load from cache
     if (Storage.isEnabled){
@@ -90,8 +108,8 @@ function loadColumn(name) {
     }
 
     // get data
-	$.getJSON(url, function() {	console.log( "success" ); })
+	$.getJSON(url, function() {	console.log('success'); })
 	.done(function(data) { loadColumnContent(data); loadColumnLatest(data.WebId); })
-	.fail(function() { console.log( "error" ); })
-	.always(function() { console.log( "complete" ); });
+	.fail(function() { console.log('error'); })
+	.always(function() { console.log('complete'); });
 }

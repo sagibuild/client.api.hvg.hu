@@ -25,8 +25,8 @@
 		<p>You link to internal pages by referring to the <code>id</code> of the page you want to show. For example, to <a href="#popup" >link</a> to the page with an <code>id</code> of "two", my link would have a <code>href="#popup"</code> in the code.</p>
 
 		<h3>Show internal pages:</h3>
-		<p><a href="#rovat" id="btn-rovat" data-role="button">Világ rovat cikkei</a></p>
-        <p><a href="#rovat" id="btn-rovat?tudomany" data-role="button">Tudomány rovat cikkei</a></p>
+		<p><a href="#rovat" id="btn-vilag" data-role="button">Világ rovat cikkei</a></p>
+        <p><a href="#rovat" id="btn-tudomany" data-role="button">Tudomány rovat cikkei</a></p>
 		<p><a href="#popup" id="btn-popup" data-role="button" data-rel="dialog" data-transition="pop">Show page "popup" (as a dialog)</a></p>
 	</div><!-- /content -->
 	
@@ -38,7 +38,7 @@
 <!-- Start of second page: #rovat -->
 <div data-role="page" id="rovat" data-theme="b">
 	<div data-role="header" data-theme="b" data-position="fixed">
-		<a href="#base" data-direction="reverse" data-iconpos="notext" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true"></a>
+		<a href="#base" name="back" data-direction="reverse" data-iconpos="notext" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true"></a>
 		<h1></h1>
 	</div><!-- /header -->
 

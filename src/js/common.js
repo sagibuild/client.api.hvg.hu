@@ -1,4 +1,5 @@
 // NOTE: this file don't contain jquery or another javascript framework function
+// NOTE: this file don't contain application specific function
 
 // Local Storage
 var Storage = new function() {
@@ -38,7 +39,12 @@ var Storage = new function() {
 
 // Current value is empty
 function isEmpty(value){
-	if (value == null || value == undefined || value == 'undefined' || value.length == 0){
+	if (value == null // NULL value
+        || value == undefined // undefined
+        || value == 'undefined' // undefined
+        || value.length == 0 // Array is empty
+        || value == '00000000-0000-0000-0000-000000000000') // Guid is empty
+    {
 		return true;
 	}
 	
