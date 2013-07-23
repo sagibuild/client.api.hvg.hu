@@ -3,6 +3,7 @@ node_js:
    - "0.10"
 
 after_success:
+  - git config travis.ci "Senator Travis"
   - git clone https://github.com/richardkundl/client.api.hvg.hu.git
   #- cd src
   #- git pull source master
