@@ -46,6 +46,7 @@ function isEmpty(value){
 }
 
 // Datetime helper
-function localDateTime(input){
-	return input.replace("T"," ").replace(/-/g,'. ');
+function localDateTime(timeStamp){
+    var dt = new Date(timeStamp);
+    return dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
 }
