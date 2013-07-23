@@ -17,7 +17,10 @@ var apiKey = '';
 apiUrl = protocol + '://' + baseUrl + '/' + apiVersion + '/' + appVersion + '/';
 
 // Site url
-var siteUrl = 'm.hvg.hu/app'
+var siteUrl = 'm.hvg.hu/app';
+
+// Program Identifier
+var programId = 'Test client v 0.12';
 
 // Get site column url
 function siteColumnUrl(columnWebId){
