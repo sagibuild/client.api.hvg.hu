@@ -9,4 +9,5 @@ after_success:
   - BUILD_NBR=$((TRAVIS_JOB_ID - 1))
   - echo "Build Number > '${BUILD_NBR}'"
   - git commit -a -m "Committed by Travis-CI (build number - ${BUILD_NBR})"
-  - git push origin master
+  - git remote -v
+  # - git push origin master
