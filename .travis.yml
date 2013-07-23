@@ -6,10 +6,7 @@ after_success:
   - git config --global user.email "richard.kundl+travis@gmail.com"
   - git config --global user.name "Richard Kundl"
   - git clone https://github.com/richardkundl/client.api.hvg.hu.git
-  #- cd src
-  #- git pull source master
-  #- git add .
   - BUILD_NBR=$((TRAVIS_JOB_ID - 1))
   - echo "Build Number > '${BUILD_NBR}'"
   - git commit -a -m "Committed by Travis-CI (build number - ${BUILD_NBR})"
-  #- git push --repo https://floydpink-public:Public-FloydPink@github.com/FloydPink-Public/spinach-android.git
+  - git push origin master
