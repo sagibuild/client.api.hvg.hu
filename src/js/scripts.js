@@ -37,14 +37,14 @@ function renderArticle(article){
 
 // Load column latest article data to page
 function loadColumnLatestContent(data){
-	if (isEmpty(data)){
+	if (isEmpty(data.Data)){
 		console.log('empty data');
 		return;
 	}
 
 	var columnContent = $('#rovat .content');
 	var articles = '';
-	$.each(data, function(index, item) {
+	$.each(data.Data, function(index, item) {
 		articles = articles + renderArticle(item);
 	});
 	columnContent.html(articles);
@@ -75,7 +75,6 @@ function loadColumnLatest(column){
 // Load column data to page
 function loadColumnContent(data){
     $('#rovat h1').text(data.Name);
-    loadColumnLatest(data.WebId);
 }
 
 // Load column data
@@ -92,7 +91,7 @@ function loadColumn(name) {
 
     // get data
 	$.getJSON(url, function() {	console.log( "success" ); })
-	.done(function(data) { loadColumnContent(data); })
+	.done(function(data) { loadColumnContent(data); loadColumnLatest(data.WebId); })
 	.fail(function() { console.log( "error" ); })
 	.always(function() { console.log( "complete" ); });
 }
