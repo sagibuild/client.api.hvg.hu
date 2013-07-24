@@ -14,19 +14,19 @@ var Storage = new function() {
 	
 	// return an element from storage
 	this.getItem = function(key){
-		if (!this.isEnabled()){ return undefined; }
+		if (!this.isEnabled() || isEmpty(key)){ return undefined; }
 		return localStorage[key];
 	};
 	
 	// set an element to storage
 	this.setItem = function(key, value){
-		if (!this.isEnabled()){ return; }
+		if (!this.isEnabled() || isEmpty(key)){ return; }
 		localStorage[key] = value;
 	};
 	
 	// remove an element from storage
 	this.removeItem = function(key) {
-		if (!this.isEnabled()){ return; }
+		if (!this.isEnabled() || isEmpty(key)){ return; }
 		localStorage.removeItem(key);
 	};
 	
