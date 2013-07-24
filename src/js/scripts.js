@@ -4,16 +4,23 @@ var app = function() {
     this.prototype.Column = '';
 }
 
+// Get column cache key name(required selected column)
+function getColumnCacheKey(){
+	if (isEmpty(app.Column)){ return ''; }
+	return app.Column + '-info';
+};
+	
+// Get articles cache key name(required selected column)
+function getArticlesCacheKey() {
+	if (isEmpty(app.Column)){ return ''; }
+	return app.Column + '-articles';
+};
+
 // Column API url
 var columnUrl = function(name) { return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey; }
 
 // Column latest articles API url
 var articleLatestUrl = function(column) { return  apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0'; }
-
-// Custom bind to popup button
-$('#btn-popup').bind('click', function(event, ui) {
-  $('#api-url').html(apiUrl);
-});
 
 // Custom bind to open "Világ" column button
 $('#btn-vilag').bind('click', function(event, ui) {
@@ -32,13 +39,22 @@ $('#rovat a[name=back]').bind('click', function(event, ui){
    app.Column = '';
 });
 
+// Custom bind to article on click
+function bindingArticleClick(){
+	$('#rovat .content a').bind('click', function(event, ui){
+		var url = this.dataset.url;
+		document.getElementById("article-content").src = url;
+		// TODO: show te new page
+	});
+}
+
 // Render article body
 // TODO: Make a handlebarsjs remplate
 function renderArticle(article){
-	var caption = '<h3><a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
+	var caption = '<h3><a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
 	var image = '';
 	if (!isEmpty(article.DefaultImageId)){
-		image = '<a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
+		image = '<a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
 				+ '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">'
 				+ '</a>';
 	}
@@ -46,7 +62,7 @@ function renderArticle(article){
 	var lead = '<p>'+article.Lead+'</p>';
 	var info = '<p class="columnarticleinfo">'
 				+ '<img class="transparent" src="http://img5.hvg.hu/static/skins/default/img/new-icons/time.png" alt="ido">'+ localDateTime(article.ReleaseDate) 
-				+ '<a href="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '"><img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI</a>'
+				+ '<a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '"><img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI</a>'
 				+ '</p>';
 
 	var ret = '<div class="article">'+ caption + image + lead + info + '</div>';
@@ -67,8 +83,10 @@ function loadColumnLatestContent(data){
 	});
 	columnContent.html(articles);
 	
+	bindingArticleClick();
+	
     // save to storage
-	Storage.setItem('vilag',JSON.stringify(data));
+	Storage.setItem(getArticlesCacheKey(), JSON.stringify(data));
 }
 
 // Load column latest data
@@ -77,7 +95,7 @@ function loadColumnLatest(column){
 
 	// load from cache
 	if (Storage.isEnabled){
-		var cache = Storage.getItem('vilag');
+		var cache = Storage.getItem(getArticlesCacheKey());
 		if (!isEmpty(cache)){
 			loadColumnLatestContent(JSON.parse(cache));
 		}
@@ -93,6 +111,9 @@ function loadColumnLatest(column){
 // Load column data to page
 function loadColumnContent(data){
     $('#rovat h1').text(data.Name);
+	
+	// save to storage
+	Storage.setItem(getColumnCacheKey(), JSON.stringify(data));
 }
 
 // Load column data
@@ -101,7 +122,7 @@ function loadColumn() {
 
     // load from cache
     if (Storage.isEnabled){
-        var cache = Storage.getItem('vilag-rovat');
+        var cache = Storage.getItem(getColumnCacheKey());
         if (!isEmpty(cache)){
             loadColumnContent(JSON.parse(cache));
         }
