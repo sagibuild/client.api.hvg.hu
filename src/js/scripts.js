@@ -20,7 +20,10 @@ function getArticlesCacheKey() {
 var columnUrl = function(name) { return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey; }
 
 // Column latest articles API url
-var articleLatestUrl = function(column) { return  apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0'; }
+var articleLatestUrl = function(column) {
+    // TODO: Missing .json extension, server side app has routing problem
+    return  apiUrl + 'ColumnArticles/'+ column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+}
 
 // Custom bind to open "Világ" column button
 $('#btn-vilag').bind('click', function(event, ui) {
@@ -51,10 +54,10 @@ function bindingArticleClick(){
 // Render article body
 // TODO: Make a handlebarsjs remplate
 function renderArticle(article){
-	var caption = '<h3><a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
+	var caption = '<h3><a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
 	var image = '';
 	if (!isEmpty(article.DefaultImageId)){
-		image = '<a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
+		image = '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
 				+ '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">'
 				+ '</a>';
 	}
@@ -62,7 +65,7 @@ function renderArticle(article){
 	var lead = '<p>'+article.Lead+'</p>';
 	var info = '<p class="columnarticleinfo">'
 				+ '<img class="transparent" src="http://img5.hvg.hu/static/skins/default/img/new-icons/time.png" alt="ido">'+ localDateTime(article.ReleaseDate) 
-				+ '<a href="#" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '"><img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI</a>'
+				+ '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '"><img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI</a>'
 				+ '</p>';
 
 	var ret = '<div class="article">'+ caption + image + lead + info + '</div>';
