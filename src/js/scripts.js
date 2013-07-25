@@ -16,14 +16,38 @@ function getArticlesCacheKey() {
 	return app.Column + '-articles';
 };
 
+// Get latest articles cache key
+function getLatestCacheKey(){
+    return 'latest';
+}
+
 // Column API url
-var columnUrl = function(name) { return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey; }
+var columnUrl = function(name) {
+    return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey;
+}
 
 // Column latest articles API url
 var articleLatestUrl = function(column) {
     // TODO: Missing .json extension, server side app has routing problem
     return  apiUrl + 'ColumnArticles/'+ column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
 }
+
+// Get latest articles
+var latestArticlesUrl = function(){
+    // TODO: Missing .json extension, server side app has routing problem
+    return  apiUrl + 'Articles?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+}
+
+// Custom bind to page before create
+$(document).bind( "pagebeforecreate", function() {
+    var url = latestArticlesUrl();
+
+    // get data
+    $.getJSON(url, function() {	console.log('success'); })
+        .done(function(data) { renderLatest(data); })
+        .fail(function() { console.log('error'); })
+        .always(function() { console.log('complete'); });
+});
 
 // Custom bind to open "Világ" column button
 $('#btn-vilag').bind('click', function(event, ui) {
@@ -47,8 +71,22 @@ function bindingArticleClick(){
 	$('#rovat .content a').bind('click', function(event, ui){
 		var url = this.dataset.url;
 		document.getElementById("article-content").src = url;
-		// TODO: show te new page
 	});
+}
+
+// Render latest article
+function renderLatest(data){
+    var ret = '';
+    $.each(data.Data, function(index, item) {
+        ret = ret + '<li><a href="index.html">'+
+            '<h3>Stephen Weber</h3>'+
+            '<p><strong>Youve been invited to a meeting at Filament Group in Boston, MA</strong></p>' +
+            '<p>Hey Stephen, if youre available at 10am tomorrow, weve got a meeting with the jQuery team.</p>' +
+            '<p class="ui-li-aside"><strong>6:24</strong>PM</p>'
+        '</a></li>';
+    });
+
+    $('#base #latest').append(ret);
 }
 
 // Render article body
