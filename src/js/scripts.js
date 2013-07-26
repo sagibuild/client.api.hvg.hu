@@ -50,17 +50,25 @@ var getArticleImageListView = function(article){
 
 // Get article url link
 var getArticleUrl = function(article, content){
-	var ret = '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
-	return ret;
+	return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
 } 
 
 // Custom bind to page before create
 $(document).bind( "pagebeforecreate", function() {
     var url = latestArticlesUrl();
-
-    // get data
+	
+	// TODO: add time cache
+	// load from cache
+    if (Storage.isEnabled){
+        var cache = Storage.getItem(app.getLatestCacheKey());
+        if (!isEmpty(cache)){
+			//loadLatestContent(JSON.parse(cache));
+        }
+    }
+    
+	// get data
     $.getJSON(url, function() {	console.log('success'); })
-        .done(function(data) { renderLatest(data); })
+        .done(function(data) { loadLatestContent(data); })
         .fail(function() { console.log('error'); })
         .always(function() { console.log('complete'); });
 });
@@ -91,22 +99,34 @@ function bindingArticleClick(){
 }
 
 // Render latest article
-function renderLatest(data){
-    var ret = '';
-    $.each(data.Data, function(index, item) {
-		var content = '';
-		if (!isEmpty(item.DefaultImageId)){
-			content = content + getArticleImageListView(item);
-		}
-		content = content + '<h3>'+ item.Caption +'</h3>' + '<p>' + item.Lead + '</p>';
-		content = content + '<p class= "ui-li-aside"><strong>' + localTime(item.ReleaseDate) +'</strong></p>';
-		content = '<li>' + getArticleUrl(item, content) + '</li>';
-		
-		ret = ret + content;
-    });
+function renderLatest(article){
+	var content = '';
+	if (!isEmpty(article.DefaultImageId)){
+		content = content + getArticleImageListView(article);
+	}
+	content = content + '<h3>'+ article.Caption +'</h3>' + '<p>' + article.Lead + '</p>';
+	content = content + '<p class= "ui-li-aside"><strong>' + localTime(article.ReleaseDate) +'</strong></p>';
+	content = '<li>' + getArticleUrl(article, content) + '</li>';
+	return content;
+}
 
-    $('#base #latest').html(ret);
+// Load column latest article data to page
+function loadLatestContent(data){
+	if (isEmpty(data.Data)){
+		console.log('empty data');
+		return;
+	}
+
+	var articles = '';
+	$.each(data.Data, function(index, item) {
+		articles = articles + renderLatest(item);
+	});
+	
+	$('#base #latest').html(articles);
 	$('#base #latest').listview('refresh');
+	
+    // save to storage
+	Storage.setItem(app.getLatestCacheKey(), JSON.stringify(data));
 }
 
 // Render article body
