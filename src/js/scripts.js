@@ -1,7 +1,7 @@
 // Current Application instance
-var app = function() {
+var app = new function() {
     // Selected column WebId
-    this.prototype.Column = '';
+    this.Column = '';
 }
 
 // Get column cache key name(required selected column)
@@ -29,14 +29,30 @@ var columnUrl = function(name) {
 // Column latest articles API url
 var articleLatestUrl = function(column) {
     // TODO: Missing .json extension, server side app has routing problem
-    return  apiUrl + 'ColumnArticles/'+ column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+    return  apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
 }
 
 // Get latest articles
 var latestArticlesUrl = function(){
     // TODO: Missing .json extension, server side app has routing problem
-    return  apiUrl + 'Articles?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+    return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
 }
+
+// Get article image
+var getArticleImage = function(article){
+	return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">';
+}
+
+// Get article image(latest)
+var getArticleImageListView = function(article){
+	return '<img src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view='+imageViews.List+'">';
+}
+
+// Get article url link
+var getArticleUrl = function(article, content){
+	var ret = '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
+	return ret;
+} 
 
 // Custom bind to page before create
 $(document).bind( "pagebeforecreate", function() {
@@ -78,32 +94,35 @@ function bindingArticleClick(){
 function renderLatest(data){
     var ret = '';
     $.each(data.Data, function(index, item) {
-        ret = ret + '<li><a href="index.html">'+
-            '<h3>Stephen Weber</h3>'+
-            '<p><strong>Youve been invited to a meeting at Filament Group in Boston, MA</strong></p>' +
-            '<p>Hey Stephen, if youre available at 10am tomorrow, weve got a meeting with the jQuery team.</p>' +
-            '<p class="ui-li-aside"><strong>6:24</strong>PM</p>'
-        '</a></li>';
+		var content = '';
+		if (!isEmpty(item.DefaultImageId)){
+			content = content + getArticleImageListView(item);
+		}
+		content = content + '<h3>'+ item.Caption +'</h3>' + '<p>' + item.Lead + '</p>';
+		content = content + '<p class= "ui-li-aside"><strong>' + localTime(item.ReleaseDate) +'</strong></p>';
+		content = '<li>' + getArticleUrl(item, content) + '</li>';
+		
+		ret = ret + content;
     });
 
-    $('#base #latest').append(ret);
+    $('#base #latest').html(ret);
+	$('#base #latest').listview('refresh');
 }
 
 // Render article body
 // TODO: Make a handlebarsjs remplate
 function renderArticle(article){
-	var caption = '<h3><a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + article.Caption + '</a></h3>';
+	var caption = '<h3>' + getArticleUrl(article, article.Caption) + '</h3>';
 	var image = '';
 	if (!isEmpty(article.DefaultImageId)){
-		image = '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">'
-				+ '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">'
-				+ '</a>';
+		var i = getArticleImage(article);
+		image = getArticleUrl(article, i);
 	}
 		
 	var lead = '<p>'+article.Lead+'</p>';
 	var info = '<p class="columnarticleinfo">'
 				+ '<img class="transparent" src="http://img5.hvg.hu/static/skins/default/img/new-icons/time.png" alt="ido">'+ localDateTime(article.ReleaseDate) 
-				+ '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '"><img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI</a>'
+				+ getArticleUrl(article, '<img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI')
 				+ '</p>';
 
 	var ret = '<div class="article">'+ caption + image + lead + info + '</div>';
