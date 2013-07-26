@@ -56,3 +56,9 @@ function localDateTime(timeStamp){
     var dt = new Date(timeStamp);
     return dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
 }
+
+// Local time
+function localTime(timeStamp){
+    var dt = new Date(timeStamp);
+    return dt.toLocaleTimeString();
+}
