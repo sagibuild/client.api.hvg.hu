@@ -214,3 +214,80 @@ function loadColumn() {
 	.fail(function() { console.log('error'); })
 	.always(function() { console.log('complete'); });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Pull down and pull up with iscroll
+(function shortPullPagePullImplementation($) { 
+	// TODO: it is Just a test data
+	"use strict";
+	var pullDownGeneratedCount = 0,
+		pullUpGeneratedCount = 0,
+		listSelector = "div.short-pull-demo-page ul.ui-listview",
+		lastItemSelector = listSelector + " > li:last-child";
+    
+	// Work with pull down data	
+	function gotPullDownData(event, data) {
+		var i,
+			newContent = "";
+		for (i=0; i<3; i+=1) {
+			newContent = "<li>Pulldown-generated row " + (++pullDownGeneratedCount) + "</li>" + newContent;
+		}
+		
+		$(listSelector).prepend(newContent).listview("refresh");
+		data.iscrollview.refresh();
+	}
+
+	// Work with pull up data
+	function gotPullUpData(event, data) {
+		var i,
+			iscrollview = data.iscrollview,
+			newContent = "";
+		for (i=0; i<3; i+=1) {
+			newContent += "<li>Pullup-generated row " + (++pullUpGeneratedCount) + "</li>";
+		}
+		
+		$(listSelector).append(newContent).listview("refresh");  
+		iscrollview.refresh(null, null,
+			$.proxy(function afterRefreshCallback() { 
+				this.scrollToElement(lastItemSelector, 400);
+			}, iscrollview) );
+	}
+  
+	// Pull down event
+	function onPullDown (event, data) { 
+		setTimeout(function fakeRetrieveDataTimeout() { 
+			gotPullDownData(event, data); }, 
+			1500); 
+	}  
+  
+	// Pull up event
+	function onPullUp (event, data) { 
+		setTimeout(function fakeRetrieveDataTimeout() { 
+			gotPullUpData(event, data);   
+		}, 1500);
+	}   
+  
+	$(document).delegate("div#rovat", "pageinit", 
+		function bindShortPullPagePullCallbacks(event) {
+			$(".iscroll-wrapper", this).bind( {
+				iscroll_onpulldown : onPullDown,
+				iscroll_onpullup   : onPullUp
+		});
+    }); 
+}(jQuery));
