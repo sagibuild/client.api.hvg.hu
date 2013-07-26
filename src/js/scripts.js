@@ -2,23 +2,23 @@
 var app = new function() {
     // Selected column WebId
     this.Column = '';
-}
-
-// Get column cache key name(required selected column)
-function getColumnCacheKey(){
-	if (isEmpty(app.Column)){ return ''; }
-	return app.Column + '-info';
-};
 	
-// Get articles cache key name(required selected column)
-function getArticlesCacheKey() {
-	if (isEmpty(app.Column)){ return ''; }
-	return app.Column + '-articles';
-};
-
-// Get latest articles cache key
-function getLatestCacheKey(){
-    return 'latest';
+	// Get column cache key name(required selected column)
+	this.getColumnCacheKey = function(){
+		if (isEmpty(this.Column)){ return ''; }
+		return this.Column + '-info';
+	}
+	
+	// Get articles cache key name(required selected column)
+	this.getArticlesCacheKey = function() {
+		if (isEmpty(this.Column)){ return ''; }
+		return this.Column + '-articles';
+	};
+	
+	// Get latest articles cache key
+	this.getLatestCacheKey = function(){
+		return 'latest';
+	}
 }
 
 // Column API url
@@ -40,7 +40,7 @@ var latestArticlesUrl = function(){
 
 // Get article image
 var getArticleImage = function(article){
-	return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view=a7ce225f-67ef-4b6d-b77d-59581e02f304" align="left">';
+	return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view='+imageViews.Cover+'" align="left">';
 }
 
 // Get article image(latest)
@@ -146,7 +146,7 @@ function loadColumnLatestContent(data){
 	bindingArticleClick();
 	
     // save to storage
-	Storage.setItem(getArticlesCacheKey(), JSON.stringify(data));
+	Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
 }
 
 // Load column latest data
@@ -155,7 +155,7 @@ function loadColumnLatest(column){
 
 	// load from cache
 	if (Storage.isEnabled){
-		var cache = Storage.getItem(getArticlesCacheKey());
+		var cache = Storage.getItem(app.getArticlesCacheKey());
 		if (!isEmpty(cache)){
 			loadColumnLatestContent(JSON.parse(cache));
 		}
@@ -173,7 +173,7 @@ function loadColumnContent(data){
     $('#rovat h1').text(data.Name);
 	
 	// save to storage
-	Storage.setItem(getColumnCacheKey(), JSON.stringify(data));
+	Storage.setItem(app.getColumnCacheKey(), JSON.stringify(data));
 }
 
 // Load column data
@@ -182,7 +182,7 @@ function loadColumn() {
 
     // load from cache
     if (Storage.isEnabled){
-        var cache = Storage.getItem(getColumnCacheKey());
+        var cache = Storage.getItem(app.getColumnCacheKey());
         if (!isEmpty(cache)){
             loadColumnContent(JSON.parse(cache));
         }
