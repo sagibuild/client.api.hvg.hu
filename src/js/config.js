@@ -31,3 +31,18 @@ function siteColumnUrl(columnWebId){
 function siteArticleUrl(columnWebId, articleWebId){
 	return siteColumnUrl(columnWebId) + articleWebId;
 }
+
+// Image views
+var imageViews = new function(){
+	// Cover type
+	this.Cover = 'a70d3c70-9f98-4448-ab52-2d0428925f98'; 
+	
+	// Cover thumbnail
+	this.CoverThumb = 'ecd0c21f-a404-4750-9e6e-c0e96b68575f';
+	
+	// List type
+	this.List = '00156696-8854-4210-a0e4-bea4911c228c';
+	
+	// Leading
+	this.Leading = 'c4219d90-6095-4b18-9d4c-616dce019189';
+}
