@@ -1,104 +1,138 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<title>hvg.hu web api</title> 
-	<script src="js/config.js"></script>
-	<script src="js/common.js"></script>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-	<link rel="stylesheet" href="css/jquery.mobile.iscrollview.min.css"/>
-	<link rel="stylesheet" href="css/jquery.mobile.iscrollview-pull.min.css"/>
-	<link rel="stylesheet" href="css/style.css" />
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
-</head> 
-<body> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>hvg.hu web api</title>
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css"/>
+    <link rel="stylesheet" href="css/jquery.mobile.iscrollview.min.css"/>
+    <link rel="stylesheet" href="css/jquery.mobile.iscrollview-pull.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
 <!-- Start of first page: #base -->
 <div data-role="page" id="base" data-theme="b">
-	<div data-role="header" data-theme="b">
-		<h1>Kezdőlap</h1>
-	</div><!-- /header -->
+    <div data-role="header" data-theme="b">
+        <h1>Kezdőlap</h1>
+    </div>
+    <!-- /header -->
 
-	<div data-role="content" data-theme="b" >	
-		<h2>Kezdőlap</h2>
-		
-		<p>I have an <code>id</code> of "one" on my page container. I'm first in the source order so I'm shown when the page loads.</p>	
-		<p>You link to internal pages by referring to the <code>id</code> of the page you want to show. For example, to <a href="#popup" >link</a> to the page with an <code>id</code> of "two", my link would have a <code>href="#popup"</code> in the code.</p>
+    <div data-role="content" data-theme="b">
+        <h2>Kezdőlap</h2>
 
-		<h3>Show internal pages:</h3>
-		<p><a href="#rovat?vilag" id="btn-vilag" data-role="button">Világ rovat cikkei</a></p>
+        <p>I have an <code>id</code> of "one" on my page container. I'm first in the source order so I'm shown when the
+            page loads.</p>
+
+        <p>You link to internal pages by referring to the <code>id</code> of the page you want to show. For example, to
+            <a href="#popup">link</a> to the page with an <code>id</code> of "two", my link would have a <code>href="#popup"</code>
+            in the code.</p>
+
+        <h3>Show internal pages:</h3>
+
+        <p><a href="#rovat?vilag" id="btn-vilag" data-role="button">Világ rovat cikkei</a></p>
+
         <p><a href="#rovat?tudomany" id="btn-tudomany" data-role="button">Tudomány rovat cikkei</a></p>
-		<p><a href="#popup" id="btn-popup" data-role="button" data-rel="dialog" data-transition="pop">Show page "popup" (as a dialog)</a></p>
+
+        <p><a href="#popup" id="btn-popup" data-role="button" data-rel="dialog" data-transition="pop">Show page "popup"
+            (as a dialog)</a></p>
 
         <h2>Friss hírek</h2>
         <ul data-role="listview" id="latest" data-inset="true">
         </ul>
-    </div><!-- /content -->
-	
-	<div data-role="footer" data-theme="b">
-		<h4>Page Footer</h4>
-	</div><!-- /footer -->
-</div><!-- /page base -->
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer" data-theme="b">
+        <h4>Page Footer</h4>
+    </div>
+    <!-- /footer -->
+</div>
+<!-- /page base -->
 
 <!-- Start of second page: #rovat -->
 <div data-role="page" id="rovat" data-theme="b">
-	<div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
-		<a href="#base" name="back" data-direction="reverse" data-iconpos="notext" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true"></a>
-		<h1></h1>
-	</div><!-- /header -->
+    <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <a href="#base" name="back" data-direction="reverse" data-iconpos="notext" data-role="button"
+           data-icon="arrow-l" data-iconpos="left" data-inline="true"></a>
 
-	<div data-iscroll="" data-role="content" data-theme="b">
-		<div class="iscroll-pulldown">
-          <span class="iscroll-pull-icon"></span><span class="iscroll-pull-label"></span>
+        <h1></h1>
+    </div>
+    <!-- /header -->
+
+    <div data-iscroll="" data-role="content" data-theme="b">
+        <div class="iscroll-pulldown">
+            <span class="iscroll-pull-icon"></span><span class="iscroll-pull-label"></span>
         </div>
-		<div class="content"></div>
-	</div><!-- /content -->
-	
-	<div data-role="footer" data-theme="b">
-		<!--<a href="#" data-icon="arrow-u">Teteje</a>-->
-	</div><!-- /footer -->
-</div><!-- /page rovat -->
+        <div class="content"></div>
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer" data-theme="b">
+        <!--<a href="#" data-icon="arrow-u">Teteje</a>-->
+    </div>
+    <!-- /footer -->
+</div>
+<!-- /page rovat -->
 
 <!-- Start of second page: #cikk -->
 <div data-role="page" id="cikk" data-theme="b">
-	<div data-role="header" data-theme="b" data-position="fixed" data-fullscreen="true">
-		<a href="#rovat" data-direction="reverse" data-iconpos="notext" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true"></a>
-		<h1></h1>
-	</div><!-- /header -->
+    <div data-role="header" data-theme="b" data-position="fixed" data-fullscreen="true">
+        <a href="#rovat" data-direction="reverse" data-iconpos="notext" data-role="button" data-icon="arrow-l"
+           data-iconpos="left" data-inline="true"></a>
 
-	<div data-role="content" data-theme="b">	
-		<div class="content">
-			<iframe id="article-content"></iframe>
-		</div>
-		<p><a href="#base" data-direction="reverse" data-role="button">Vissza</a></p>	
-	</div><!-- /content -->
-	
-	<div data-role="footer" data-theme="b">
-		<!--<a href="#" data-icon="arrow-u">Teteje</a>-->
-	</div><!-- /footer -->
-</div><!-- /page cikk -->
+        <h1></h1>
+    </div>
+    <!-- /header -->
+
+    <div data-role="content" data-theme="b">
+        <div class="content">
+            <iframe id="article-content"></iframe>
+        </div>
+        <p><a href="#base" data-direction="reverse" data-role="button">Vissza</a></p>
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer" data-theme="b">
+        <!--<a href="#" data-icon="arrow-u">Teteje</a>-->
+    </div>
+    <!-- /footer -->
+</div>
+<!-- /page cikk -->
 
 <!-- Start of third page: #popup -->
 <div data-role="page" id="popup" data-theme="b">
-	<div data-role="header" data-theme="b">
-		<h1>Dialog</h1>
-	</div><!-- /header -->
+    <div data-role="header" data-theme="b">
+        <h1>Dialog</h1>
+    </div>
+    <!-- /header -->
 
-	<div data-role="content" data-theme="b">	
-		<h2>Popup</h2>
-		<p>Az API url: <label id='api-url'></label></p>
-		<p>I have an id of "popup" on my page container and only look like a dialog because the link to me had a <code>data-rel="dialog"</code> attribute which gives me this inset look and a <code>data-transition="pop"</code> attribute to change the transition to pop. Without this, I'd be styled as a normal page.</p>		
-		<p><a href="#base" data-rel="back" data-role="button" data-inline="true" data-icon="back">Vissza</a></p>	
-	</div><!-- /content -->
-	
-	<div data-role="footer" data-theme="b">
-		<h4>Page Footer</h4>
-	</div><!-- /footer -->
-</div><!-- /page popup -->
+    <div data-role="content" data-theme="b">
+        <h2>Popup</h2>
 
-	<script src="js/scripts.js"></script>
-	<script src="js/iscroll.min.js"></script>
-	<script src="js/jquery.mobile.iscrollview.min.js"></script>
+        <p>Az API url: <label id='api-url'></label></p>
+
+        <p>I have an id of "popup" on my page container and only look like a dialog because the link to me had a <code>data-rel="dialog"</code>
+            attribute which gives me this inset look and a <code>data-transition="pop"</code> attribute to change the
+            transition to pop. Without this, I'd be styled as a normal page.</p>
+
+        <p><a href="#base" data-rel="back" data-role="button" data-inline="true" data-icon="back">Vissza</a></p>
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer" data-theme="b">
+        <h4>Page Footer</h4>
+    </div>
+    <!-- /footer -->
+</div>
+<!-- /page popup -->
+
+<script src="js/scripts.js"></script>
+<script src="js/iscroll.min.js"></script>
+<script src="js/jquery.mobile.iscrollview.min.js"></script>
+<script src="js/perf.js"></script>
 </body>
 </html>
