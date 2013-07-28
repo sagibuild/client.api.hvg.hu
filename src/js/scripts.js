@@ -24,7 +24,7 @@ var app = new function () {
     // Get latest articles cache key
     this.getLatestCacheKey = function () {
         return 'latest';
-    }
+    };
 };
 
 // Column API url
@@ -56,7 +56,7 @@ var getArticleImageListView = function (article) {
 
 // Get article url link
 var getArticleUrl = function (article, content) {
-    return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
+    return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>';
 };
 
 // Custom bind to page before create
