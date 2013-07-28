@@ -39,16 +39,12 @@ var Storage = new function() {
 
 // Current value is empty
 function isEmpty(value){
-	if (value == null // NULL value
+	return value == null // NULL value
         || value == undefined // undefined
         || value == 'undefined' // undefined
         || value.length == 0 // Array is empty
-        || value == '00000000-0000-0000-0000-000000000000') // Guid is empty
-    {
-		return true;
-	}
-	
-	return false;
+        || value == '00000000-0000-0000-0000-000000000000' // Guid empty
+        ;
 }
 
 // Datetime helper

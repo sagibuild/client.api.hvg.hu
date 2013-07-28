@@ -1,57 +1,63 @@
 // Current Application instance
-var app = new function() {
+var app = new function () {
+    "use strict";
+
     // Selected column WebId
     this.Column = '';
-	
-	// Get column cache key name(required selected column)
-	this.getColumnCacheKey = function(){
-		if (isEmpty(this.Column)){ return ''; }
-		return this.Column + '-info';
-	}
-	
-	// Get articles cache key name(required selected column)
-	this.getArticlesCacheKey = function() {
-		if (isEmpty(this.Column)){ return ''; }
-		return this.Column + '-articles';
-	};
-	
-	// Get latest articles cache key
-	this.getLatestCacheKey = function(){
-		return 'latest';
-	}
-}
+
+    // Get column cache key name(required selected column)
+    this.getColumnCacheKey = function () {
+        if (isEmpty(this.Column)) {
+            return '';
+        }
+        return this.Column + '-info';
+    };
+
+    // Get articles cache key name(required selected column)
+    this.getArticlesCacheKey = function () {
+        if (isEmpty(this.Column)) {
+            return '';
+        }
+        return this.Column + '-articles';
+    };
+
+    // Get latest articles cache key
+    this.getLatestCacheKey = function () {
+        return 'latest';
+    }
+};
 
 // Column API url
-var columnUrl = function(name) {
-    return apiUrl + 'Columns/'+ name + '.json?apikey=' + apiKey;
-}
+var columnUrl = function (name) {
+    return apiUrl + 'Columns/' + name + '.json?apikey=' + apiKey;
+};
 
 // Column latest articles API url
-var articleLatestUrl = function(column) {
+var articleLatestUrl = function (column) {
     // TODO: Missing .json extension, server side app has routing problem
-    return  apiUrl + 'ColumnArticles/'+ column + '.json?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
-}
+    return  apiUrl + 'ColumnArticles/' + column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+};
 
 // Get latest articles
-var latestArticlesUrl = function(){
+var latestArticlesUrl = function () {
     // TODO: Missing .json extension, server side app has routing problem
     return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
-}
+};
 
 // Get article image
-var getArticleImage = function(article){
-	return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view='+imageViews.Cover+'" align="left">';
-}
+var getArticleImage = function (article) {
+    return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
+};
 
 // Get article image(latest)
-var getArticleImageListView = function(article){
-	return '<img src="http://img8.hvg.hu/image.aspx?id='+article.DefaultImageId+'&amp;view='+imageViews.List+'">';
-}
+var getArticleImageListView = function (article) {
+    return '<img src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.List + '">';
+};
 
 // Get article url link
-var getArticleUrl = function(article, content){
-	return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
-} 
+var getArticleUrl = function (article, content) {
+    return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>'
+};
 
 // Custom bind to page before create
 $(document).bind( "pagebeforecreate", function() {
@@ -93,8 +99,7 @@ $('#rovat a[name=back]').bind('click', function(event, ui){
 // Custom bind to article on click
 function bindingArticleClick(){
 	$('#rovat .content a').bind('click', function(event, ui){
-		var url = this.dataset.url;
-		document.getElementById("article-content").src = url;
+		document.getElementById("article-content").src = this.dataset.url;
 	});
 }
 
@@ -145,8 +150,7 @@ function renderArticle(article){
 				+ getArticleUrl(article, '<img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI')
 				+ '</p>';
 
-	var ret = '<div class="article">'+ caption + image + lead + info + '</div>';
-	return ret;
+	return '<div class="article">'+ caption + image + lead + info + '</div>';
 }
 
 // Load column latest article data to page
@@ -232,7 +236,7 @@ function loadColumn() {
 
 
 
-// Pull down and pull up with iscroll
+// Pull down and pull up with iScroll
 (function shortPullPagePullImplementation($) { 
 	// TODO: it is Just a test data
 	"use strict";

@@ -1,5 +1,5 @@
 // Protocol (http, https)
-var protocol = 'https'
+var protocol = 'https';
 
 // API base url
 var baseUrl = 'api.hvg.hu';
