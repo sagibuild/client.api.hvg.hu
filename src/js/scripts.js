@@ -27,205 +27,233 @@ var app = new function () {
     };
 };
 
-// Column API url
-var columnUrl = function (name) {
-    return apiUrl + 'Columns/' + name + '.json?apikey=' + apiKey;
+// Url class
+var url = new function () {
+    "use strict";
+
+    // Column API url
+    this.columnUrl = function (name) {
+        return apiUrl + 'Columns/' + name + '.json?apikey=' + apiKey;
+    };
+
+    // Column latest articles API url
+    this.articleLatestUrl = function (column) {
+        // TODO: Missing .json extension, server side app has routing problem
+        return  apiUrl + 'ColumnArticles/' + column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+    };
+
+    // Get latest articles
+    this.latestArticlesUrl = function () {
+        // TODO: Missing .json extension, server side app has routing problem
+        return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
+    };
 };
 
-// Column latest articles API url
-var articleLatestUrl = function (column) {
-    // TODO: Missing .json extension, server side app has routing problem
-    return  apiUrl + 'ColumnArticles/' + column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+// Page class
+var page = new function () {
+    "use strict";
+
+    // START selectors
+
+    // END selectors
+
+// START renderer
+    // Get article image
+    this.getArticleImage = function (article) {
+        return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
+    };
+
+    // Get article image(latest)
+    this.getArticleImageListView = function (article) {
+        return '<img src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.List + '">';
+    };
+
+    // Get article url link
+    this.getArticleUrl = function (article, content) {
+        return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>';
+    };
+
+    // Render article body
+    // TODO: Make a handlebarsjs remplate
+    this.renderArticle = function (article) {
+        var caption = '<h3>' + this.getArticleUrl(article, article.Caption) + '</h3>';
+        var image = '';
+        if (!isEmpty(article.DefaultImageId)) {
+            var i = this.getArticleImage(article);
+            image = this.getArticleUrl(article, i);
+        }
+
+        var lead = '<p>' + article.Lead + '</p>';
+        var info = '<p class="columnarticleinfo">'
+            + '<img class="transparent" src="http://img5.hvg.hu/static/skins/default/img/new-icons/time.png" alt="ido">' + localDateTime(article.ReleaseDate)
+            + this.getArticleUrl(article, '<img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI')
+            + '</p>';
+
+        return '<div class="article">' + caption + image + lead + info + '</div>';
+    }
+
+    // Render latest article
+    this.renderLatest = function (article) {
+        var content = '';
+        if (!isEmpty(article.DefaultImageId)) {
+            content = content + this.getArticleImageListView(article);
+        }
+        content = content + '<h3>' + article.Caption + '</h3>' + '<p>' + article.Lead + '</p>';
+        content = content + '<p class= "ui-li-aside"><strong>' + localTime(article.ReleaseDate) + '</strong></p>';
+        content = '<li>' + this.getArticleUrl(article, content) + '</li>';
+        return content;
+    }
+// END renderer
 };
 
-// Get latest articles
-var latestArticlesUrl = function () {
-    // TODO: Missing .json extension, server side app has routing problem
-    return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
-};
-
-// Get article image
-var getArticleImage = function (article) {
-    return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
-};
-
-// Get article image(latest)
-var getArticleImageListView = function (article) {
-    return '<img src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.List + '">';
-};
-
-// Get article url link
-var getArticleUrl = function (article, content) {
-    return '<a href="#cikk" data-url="' + siteArticleUrl(article.Column.WebId, article.WebId) + '" data-transition="pop" title="' + article.Caption + '">' + content + '</a>';
-};
 
 // Custom bind to page before create
-$(document).bind( "pagebeforecreate", function() {
-    var url = latestArticlesUrl();
-	
-	// TODO: add time cache
-	// load from cache
-    if (Storage.isEnabled){
+$(document).bind("pagebeforecreate", function () {
+    // TODO: add time cache
+    // load from cache
+    if (Storage.isEnabled) {
         var cache = Storage.getItem(app.getLatestCacheKey());
-        if (!isEmpty(cache)){
-			//loadLatestContent(JSON.parse(cache));
+        if (!isEmpty(cache)) {
+            //loadLatestContent(JSON.parse(cache));
         }
     }
-    
-	// get data
-    $.getJSON(url, function() {	console.log('success'); })
-        .done(function(data) { loadLatestContent(data); })
-        .fail(function() { console.log('error'); })
-        .always(function() { console.log('complete'); });
+
+    // get data
+    $.getJSON(url.latestArticlesUrl(), function () {
+        console.log('success');
+    })
+        .done(function (data) {
+            loadLatestContent(data);
+        })
+        .fail(function () {
+            console.log('error');
+        })
+        .always(function () {
+            console.log('complete');
+        });
 });
 
 // Custom bind to open "Világ" column button
-$('#btn-vilag').bind('click', function(event, ui) {
+$('#btn-vilag').bind('click', function (event, ui) {
     app.Column = 'vilag';
     loadColumn();
 });
 
 // Custom bind to open "Tudomány" column button
-$('#btn-tudomany').bind('click', function(event, ui) {
+$('#btn-tudomany').bind('click', function (event, ui) {
     app.Column = 'tudomany';
     loadColumn();
 });
 
 // Custom bind to 'rovat' Back bind
-$('#rovat a[name=back]').bind('click', function(event, ui){
-   app.Column = '';
+$('#rovat a[name=back]').bind('click', function (event, ui) {
+    app.Column = '';
 });
 
 // Custom bind to article on click
-function bindingArticleClick(){
-	$('#rovat .content a').bind('click', function(event, ui){
-		document.getElementById("article-content").src = this.dataset.url;
-	});
-}
-
-// Render latest article
-function renderLatest(article){
-	var content = '';
-	if (!isEmpty(article.DefaultImageId)){
-		content = content + getArticleImageListView(article);
-	}
-	content = content + '<h3>'+ article.Caption +'</h3>' + '<p>' + article.Lead + '</p>';
-	content = content + '<p class= "ui-li-aside"><strong>' + localTime(article.ReleaseDate) +'</strong></p>';
-	content = '<li>' + getArticleUrl(article, content) + '</li>';
-	return content;
+function bindingArticleClick() {
+    $('#rovat .content a').bind('click', function (event, ui) {
+        document.getElementById("article-content").src = this.dataset.url;
+    });
 }
 
 // Load column latest article data to page
-function loadLatestContent(data){
-	if (isEmpty(data.Data)){
-		console.log('empty data');
-		return;
-	}
+function loadLatestContent(data) {
+    if (isEmpty(data.Data)) {
+        console.log('empty data');
+        return;
+    }
 
-	var articles = '';
-	$.each(data.Data, function(index, item) {
-		articles = articles + renderLatest(item);
-	});
-	
-	$('#base #latest').html(articles);
-	$('#base #latest').listview('refresh');
-	
-    // save to storage
-	Storage.setItem(app.getLatestCacheKey(), JSON.stringify(data));
-}
+    var articles = '';
+    $.each(data.Data, function (index, item) {
+        articles = articles + page.renderLatest(item);
+    });
 
-// Render article body
-// TODO: Make a handlebarsjs remplate
-function renderArticle(article){
-	var caption = '<h3>' + getArticleUrl(article, article.Caption) + '</h3>';
-	var image = '';
-	if (!isEmpty(article.DefaultImageId)){
-		var i = getArticleImage(article);
-		image = getArticleUrl(article, i);
-	}
-		
-	var lead = '<p>'+article.Lead+'</p>';
-	var info = '<p class="columnarticleinfo">'
-				+ '<img class="transparent" src="http://img5.hvg.hu/static/skins/default/img/new-icons/time.png" alt="ido">'+ localDateTime(article.ReleaseDate) 
-				+ getArticleUrl(article, '<img class="transparent" alt="szerzo" src="http://img9.hvg.hu/static/skins/default/img/new-icons/author.png">MTI')
-				+ '</p>';
+    $('#base #latest').html(articles);
+    $('#base #latest').listview('refresh');
 
-	return '<div class="article">'+ caption + image + lead + info + '</div>';
+    // save to cache
+    Storage.setItem(app.getLatestCacheKey(), JSON.stringify(data));
 }
 
 // Load column latest article data to page
-function loadColumnLatestContent(data){
-	if (isEmpty(data.Data)){
-		console.log('empty data');
-		return;
-	}
+function loadColumnLatestContent(data) {
+    if (isEmpty(data.Data)) {
+        console.log('empty data');
+        return;
+    }
 
-	var columnContent = $('#rovat .content');
-	var articles = '';
-	$.each(data.Data, function(index, item) {
-		articles = articles + renderArticle(item);
-	});
-	columnContent.html(articles);
-	
-	bindingArticleClick();
-	
-    // save to storage
-	Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
+    var columnContent = $('#rovat .content');
+    var articles = '';
+    $.each(data.Data, function (index, item) {
+        articles = articles + page.renderArticle(item);
+    });
+    columnContent.html(articles);
+
+    bindingArticleClick();
+
+    // save to cache
+    Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
 }
 
 // Load column latest data
-function loadColumnLatest(column){
-	var url = articleLatestUrl(column);
-
-	// load from cache
-	if (Storage.isEnabled){
-		var cache = Storage.getItem(app.getArticlesCacheKey());
-		if (!isEmpty(cache)){
-			loadColumnLatestContent(JSON.parse(cache));
-		}
-	}
+function loadColumnLatest(column) {
+    // load from cache
+    if (Storage.isEnabled) {
+        var cache = Storage.getItem(app.getArticlesCacheKey());
+        if (!isEmpty(cache)) {
+            loadColumnLatestContent(JSON.parse(cache));
+        }
+    }
 
     // get data
-	$.getJSON(url, function() { console.log('success'); })
-	.done(function(data) { loadColumnLatestContent(data); })
-	.fail(function() { console.log('error'); })
-	.always(function() { console.log('complete'); });
+    $.getJSON(url.articleLatestUrl(column), function () {
+        console.log('success');
+    })
+        .done(function (data) {
+            loadColumnLatestContent(data);
+        })
+        .fail(function () {
+            console.log('error');
+        })
+        .always(function () {
+            console.log('complete');
+        });
 }
 
 // Load column data to page
-function loadColumnContent(data){
+function loadColumnContent(data) {
     $('#rovat h1').text(data.Name);
-	
-	// save to storage
-	Storage.setItem(app.getColumnCacheKey(), JSON.stringify(data));
+
+    // save to cache
+    Storage.setItem(app.getColumnCacheKey(), JSON.stringify(data));
 }
 
 // Load column data
 function loadColumn() {
-	var url = columnUrl(app.Column);
-
     // load from cache
-    if (Storage.isEnabled){
+    if (Storage.isEnabled) {
         var cache = Storage.getItem(app.getColumnCacheKey());
-        if (!isEmpty(cache)){
+        if (!isEmpty(cache)) {
             loadColumnContent(JSON.parse(cache));
         }
     }
 
     // get data
-	$.getJSON(url, function() {	console.log('success'); })
-	.done(function(data) { loadColumnContent(data); loadColumnLatest(data.WebId); })
-	.fail(function() { console.log('error'); })
-	.always(function() { console.log('complete'); });
+    $.getJSON(url.columnUrl(app.Column), function () {
+        console.log('success');
+    })
+        .done(function (data) {
+            loadColumnContent(data);
+            loadColumnLatest(data.WebId);
+        })
+        .fail(function () {
+            console.log('error');
+        })
+        .always(function () {
+            console.log('complete');
+        });
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -237,61 +265,62 @@ function loadColumn() {
 
 
 // Pull down and pull up with iScroll
-(function shortPullPagePullImplementation($) { 
-	// TODO: it is Just a test data
-	"use strict";
-	var pullDownGeneratedCount = 0,
-		pullUpGeneratedCount = 0,
-		listSelector = "div.short-pull-demo-page ul.ui-listview",
-		lastItemSelector = listSelector + " > li:last-child";
-    
-	// Work with pull down data	
-	function gotPullDownData(event, data) {
-		var i,
-			newContent = "";
-		for (i=0; i<3; i+=1) {
-			newContent = "<li>Pulldown-generated row " + (++pullDownGeneratedCount) + "</li>" + newContent;
-		}
-		
-		$(listSelector).prepend(newContent).listview("refresh");
-		data.iscrollview.refresh();
-	}
+(function shortPullPagePullImplementation($) {
+    // TODO: it is Just a test data
+    "use strict";
+    var pullDownGeneratedCount = 0,
+        pullUpGeneratedCount = 0,
+        listSelector = "div.short-pull-demo-page ul.ui-listview",
+        lastItemSelector = listSelector + " > li:last-child";
 
-	// Work with pull up data
-	function gotPullUpData(event, data) {
-		var i,
-			iscrollview = data.iscrollview,
-			newContent = "";
-		for (i=0; i<3; i+=1) {
-			newContent += "<li>Pullup-generated row " + (++pullUpGeneratedCount) + "</li>";
-		}
-		
-		$(listSelector).append(newContent).listview("refresh");  
-		iscrollview.refresh(null, null,
-			$.proxy(function afterRefreshCallback() { 
-				this.scrollToElement(lastItemSelector, 400);
-			}, iscrollview) );
-	}
-  
-	// Pull down event
-	function onPullDown (event, data) { 
-		setTimeout(function fakeRetrieveDataTimeout() { 
-			gotPullDownData(event, data); }, 
-			1500); 
-	}  
-  
-	// Pull up event
-	function onPullUp (event, data) { 
-		setTimeout(function fakeRetrieveDataTimeout() { 
-			gotPullUpData(event, data);   
-		}, 1500);
-	}   
-  
-	$(document).delegate("div#rovat", "pageinit", 
-		function bindShortPullPagePullCallbacks(event) {
-			$(".iscroll-wrapper", this).bind( {
-				iscroll_onpulldown : onPullDown,
-				iscroll_onpullup   : onPullUp
-		});
-    }); 
+    // Work with pull down data
+    function gotPullDownData(event, data) {
+        var i,
+            newContent = "";
+        for (i = 0; i < 3; i += 1) {
+            newContent = "<li>Pulldown-generated row " + (++pullDownGeneratedCount) + "</li>" + newContent;
+        }
+
+        $(listSelector).prepend(newContent).listview("refresh");
+        data.iscrollview.refresh();
+    }
+
+    // Work with pull up data
+    function gotPullUpData(event, data) {
+        var i,
+            iscrollview = data.iscrollview,
+            newContent = "";
+        for (i = 0; i < 3; i += 1) {
+            newContent += "<li>Pullup-generated row " + (++pullUpGeneratedCount) + "</li>";
+        }
+
+        $(listSelector).append(newContent).listview("refresh");
+        iscrollview.refresh(null, null,
+            $.proxy(function afterRefreshCallback() {
+                this.scrollToElement(lastItemSelector, 400);
+            }, iscrollview));
+    }
+
+    // Pull down event
+    function onPullDown(event, data) {
+        setTimeout(function fakeRetrieveDataTimeout() {
+                gotPullDownData(event, data);
+            },
+            1500);
+    }
+
+    // Pull up event
+    function onPullUp(event, data) {
+        setTimeout(function fakeRetrieveDataTimeout() {
+            gotPullUpData(event, data);
+        }, 1500);
+    }
+
+    $(document).delegate("div#rovat", "pageinit",
+        function bindShortPullPagePullCallbacks(event) {
+            $(".iscroll-wrapper", this).bind({
+                iscroll_onpulldown:onPullDown,
+                iscroll_onpullup:onPullUp
+            });
+        });
 }(jQuery));
