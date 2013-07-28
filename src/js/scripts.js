@@ -55,6 +55,10 @@ var page = new function () {
 
     // START selectors
 
+    this.btnVilag = $('#btn-vilag');
+
+    this.btnTudomany = $('#btn-tudomany');
+
     // END selectors
 
 // START renderer
@@ -98,6 +102,7 @@ var page = new function () {
         if (!isEmpty(article.DefaultImageId)) {
             content = content + this.getArticleImageListView(article);
         }
+
         content = content + '<h3>' + article.Caption + '</h3>' + '<p>' + article.Lead + '</p>';
         content = content + '<p class= "ui-li-aside"><strong>' + localTime(article.ReleaseDate) + '</strong></p>';
         content = '<li>' + this.getArticleUrl(article, content) + '</li>';
@@ -105,7 +110,6 @@ var page = new function () {
     }
 // END renderer
 };
-
 
 // Custom bind to page before create
 $(document).bind("pagebeforecreate", function () {
@@ -134,13 +138,13 @@ $(document).bind("pagebeforecreate", function () {
 });
 
 // Custom bind to open "Világ" column button
-$('#btn-vilag').bind('click', function (event, ui) {
+page.btnVilag.bind('click', function (event, ui) {
     app.Column = 'vilag';
     loadColumn();
 });
 
 // Custom bind to open "Tudomány" column button
-$('#btn-tudomany').bind('click', function (event, ui) {
+page.btnTudomany.bind('click', function (event, ui) {
     app.Column = 'tudomany';
     loadColumn();
 });
