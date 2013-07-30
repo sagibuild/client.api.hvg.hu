@@ -45,7 +45,7 @@ var url = new function () {
     // Get latest articles
     this.latestArticlesUrl = function () {
         // TODO: Missing .json extension, server side app has routing problem
-        return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
+        return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=1225535100&endts=1345939200';
     };
 };
 
