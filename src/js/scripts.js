@@ -39,7 +39,7 @@ var url = new function () {
     // Column latest articles API url
     this.articleLatestUrl = function (column) {
         // TODO: Missing .json extension, server side app has routing problem
-        return  apiUrl + 'ColumnArticles/' + column + '?apikey=' + apiKey + '&limit=10&skip=0&startts=0&endts=0';
+        return  apiUrl + 'ColumnArticles/' + column + '?apikey=' + apiKey + '&limit=5&skip=0&startts=0&endts=0';
     };
 
     // Get latest articles
@@ -61,8 +61,9 @@ var page = new function () {
 
     // END selectors
 
-// START renderer
-    // Get article image
+	// START renderer
+    
+	// Get article image
     this.getArticleImage = function (article) {
         return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
     };
@@ -108,7 +109,8 @@ var page = new function () {
         content = '<li>' + this.getArticleUrl(article, content) + '</li>';
         return content;
     }
-// END renderer
+	
+	// END renderer
 };
 
 // Custom bind to page before create
