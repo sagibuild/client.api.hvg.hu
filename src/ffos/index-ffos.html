@@ -219,18 +219,12 @@
     <section data-type="sidebar">
       <header>
         <menu type="toolbar">
-          <a href="#">Done</a>
+          <a href="#">Bezárás</a>
         </menu>
-        <h1>Drawer demo</h1>
+        <h1>Rovatok</h1>
       </header>
       <nav>
         <ul name="rovatok">
-        </ul>
-        <h2>Tis is a subtitle</h2>
-        <ul>
-          <li><a href="#">item 4</a></li>
-          <li><a href="#">item 5</a></li>
-          <li><a href="#">item 6</a></li>
         </ul>
       </nav>
     </section>
@@ -242,6 +236,7 @@
         <h1>hvg.hu<em> app</em></h1>
       </header>
       <article class="content scrollable header">
+		<progress class="pack-activity light" id="home-activity" value="0" max="100"></progress>
         <div data-type="list">
           <ul>
             <li>
@@ -1018,56 +1013,19 @@
 <script src="../js/scripts.js"></script>
 <script src="../js/perf.js"></script>
 <script>
-
-function createColumn(column){
-	// insert field
-	var field = '<section id="rovatok-'+ column.WebId + '" role="region" data-position="right">'
-		+ '<header class="fixed">'
-		+ '<a id="btn-' + column.WebId + '-back" href="#drawer"><span class="icon icon-back">back</span></a>'
-		+ '<menu type="toolbar"><a id="btn-' + column.WebId + '-close" href="#">'
-		+ '<span class="icon icon-close">close'
-		+ '</span></a></menu>'
-		+ '<h1>'+ column.Name+ '</h1>'
-		+ '</header>'
-		+ ' <article class="content scrollable header">'
-		+ ' <header><h2>Normal</h2></header>'
-		+ ' <div>'
-        +	' <button>Default</button>'
-        +	' <button class="recommend">Recommend</button>'
-        +	' <button class="danger">Danger</button>'
-		+ ' </div>'
-		+ ' </article>'
-		+ ' </section>';
-	var $body = $(document.body);
-	$body.prepend(field);
-		
-	// add to drawer
-	var $list = $(document.getElementsByName("rovatok"));
-	$list.append('<li><a href="#" id="btn-rovatok-'+column.WebId+'">'+column.Name+'</a></li>')
-	
-	// bind click event
-	document.querySelector('#btn-rovatok-' + column.WebId).addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'current';
-		document.querySelector('[data-position="current"]').className = 'left';
-	});
-	document.querySelector('#btn-'+ column.WebId +'-back').addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'right';
-		document.querySelector('[data-position="current"]').className = 'current';
-	});
-	document.querySelector('#btn-'+ column.WebId +'-close').addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'right';
-		document.querySelector('[data-position="current"]').className = 'current';
-	});
+function setActivity(id, isVisible){
+	var activity = $('#'+id);
+	if (isVisible){
+		activity.show();
+	}
+	else {
+		activity.hide();
+	}
 }
 
 $(document).ready(function(){
-	var datas = jQuery.parseJSON('[{"Id":1391,"WebId":"itthon","Name":"Itthon","ParentWebId":""},{"Id":1251,"WebId":"vilag","Name":"Világ","ParentWebId":""},{"Id":1318,"WebId":"gazdasag","Name":"Gazdaság","ParentWebId":""},{"Id":1227,"WebId":"tudomany","Name":"Tech","ParentWebId":""},{"Id":1302,"WebId":"_tudomany","Name":"Tudomány","ParentWebId":""},{"Id":1351,"WebId":"news","Name":"News","ParentWebId":""},{"Id":1332,"WebId":"hetilap","Name":"HVG Hetilap","ParentWebId":""},{"Id":1189,"WebId":"panorama","Name":"Panoráma","ParentWebId":""},{"Id":1209,"WebId":"sport","Name":"Sport","ParentWebId":""},{"Id":1223,"WebId":"velemeny","Name":"Vélemény","ParentWebId":""},{"Id":1466,"WebId":"cegauto","Name":"Autó","ParentWebId":""},{"Id":1388,"WebId":"kkv","Name":"Vállalkozás","ParentWebId":""},{"Id":1301,"WebId":"egeszseg","Name":"Egészség","ParentWebId":""},{"Id":1193,"WebId":"egyeb","Name":"Egyéb","ParentWebId":""},{"Id":1349,"WebId":"karrier","Name":"Karrier","ParentWebId":""},{"Id":1513,"WebId":"w","Name":"w.hvg.hu","ParentWebId":""},{"Id":1600,"WebId":"ingatlan","Name":"Ingatlan","ParentWebId":""},{"Id":1601,"WebId":"elet","Name":"Élet + Stílus","ParentWebId":""}]');
-	$.each(datas, function(key, value){
-		createColumn(value);
-	});
-	//createColumn("tudomany");
-	//createColumn("vilag");
-	//createColumn("gazdasag");
+	loadColumns();
+	setTimeout(function() { setActivity('home-activity',false); }, 5000);
 });
 
 </script>

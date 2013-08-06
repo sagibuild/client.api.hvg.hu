@@ -47,6 +47,11 @@ var url = new function () {
         // TODO: Missing .json extension, server side app has routing problem
         return  apiUrl + 'Articles.json?apikey=' + apiKey + '&limit=5&skip=0&startts=1225535100&endts=1345939200';
     };
+	
+	// Get all columns
+	this.columnsUrl = function(){
+        return apiUrl + 'Columns.json?apikey=' + apiKey;		
+	};
 };
 
 // Page class
@@ -252,6 +257,73 @@ function loadColumn() {
         .done(function (data) {
             loadColumnContent(data);
             loadColumnLatest(data.WebId);
+        })
+        .fail(function () {
+            console.log('error');
+        })
+        .always(function () {
+            console.log('complete');
+        });
+}
+
+function renderColumnInColumns(column){
+	// insert field
+	var field = '<section id="rovatok-'+ column.WebId + '" role="region" data-position="right">'
+		+ '<header class="fixed">'
+		+ '<a id="btn-' + column.WebId + '-back" href="#drawer"><span class="icon icon-back">back</span></a>'
+		+ '<menu type="toolbar"><a id="btn-' + column.WebId + '-close" href="#">'
+		+ '<span class="icon icon-close">close'
+		+ '</span></a></menu>'
+		+ '<h1>'+ column.Name+ '</h1>'
+		+ '</header>'
+		+ ' <article class="content scrollable header">'
+		+ ' <header><h2>Normal</h2></header>'
+		+ ' <div>'
+        +	' <button>Default</button>'
+        +	' <button class="recommend">Recommend</button>'
+        +	' <button class="danger">Danger</button>'
+		+ ' </div>'
+		+ ' </article>'
+		+ ' </section>';
+	var $body = $(document.body);
+	$body.prepend(field);
+		
+	// add to drawer
+	var $list = $(document.getElementsByName("rovatok"));
+	$list.append('<li><a href="#" id="btn-rovatok-'+column.WebId+'">'+column.Name+'</a></li>')
+	
+	// bind click event
+	document.querySelector('#btn-rovatok-' + column.WebId).addEventListener ('click', function () {
+		document.querySelector('#rovatok-' + column.WebId).className = 'current';
+		document.querySelector('[data-position="current"]').className = 'left';
+	});
+	document.querySelector('#btn-'+ column.WebId +'-back').addEventListener ('click', function () {
+		document.querySelector('#rovatok-' + column.WebId).className = 'right';
+		document.querySelector('[data-position="current"]').className = 'current';
+	});
+	document.querySelector('#btn-'+ column.WebId +'-close').addEventListener ('click', function () {
+		document.querySelector('#rovatok-' + column.WebId).className = 'right';
+		document.querySelector('[data-position="current"]').className = 'current';
+	});
+}
+
+function loadColumnsContent(columns){
+	// TODO: cache and empty check
+	$.each(columns.Data, function(key, value){
+		renderColumnInColumns(value);
+	});
+}
+
+// Load columns
+function loadColumns(){
+	// TODO: cache
+
+	// get data
+    $.getJSON(url.columnsUrl(), function () {
+        console.log('success');
+    })
+        .done(function (data) {
+            loadColumnsContent(data);
         })
         .fail(function () {
             console.log('error');
