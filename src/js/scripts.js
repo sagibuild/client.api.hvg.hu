@@ -52,6 +52,11 @@ var url = new function () {
 	this.columnsUrl = function(){
         return apiUrl + 'Columns.json?apikey=' + apiKey;		
 	};
+
+	// Get cover
+	this.coverUrl = function () {
+		return apiUrl + 'Cover.json?apikey=' + apiKey;
+	};
 };
 
 // Page class
@@ -266,11 +271,82 @@ function loadColumn() {
         });
 }
 
-function renderColumnInColumns(column){
+
+
+// **********************************************
+// **********************************************
+// FFOS
+// **********************************************
+// **********************************************
+
+function setActivity(id, isVisible){
+	var activity = $('#'+id);
+	if (isVisible){
+		activity.show();
+	}
+	else {
+		activity.hide();
+	}
+}
+
+// ********************************************
+// **** COLUMN
+// ********************************************
+function bindColumnLinks(column, backLink) {
+
+	var backButton = document.querySelector('#btn-' + column.WebId + '-back');
+	var rovat = document.querySelector('#rovatok-' + column.WebId);
+	// bind click event
+	if (backLink == 'rovatok') {
+		// in
+		document.querySelector('#btn-rovatok-' + column.WebId).addEventListener('click', function () {
+			rovat.className = 'current';
+			document.querySelector('[data-position="current"]').className = 'left';
+
+			// out
+			$(backButton).unbind("click");
+			backButton.href = "#drawer";
+			backButton.addEventListener('click', function () {
+				rovat.className = 'right';
+				document.querySelector('[data-position="current"]').className = 'current';
+			});
+		});	
+	}
+	else if (backLink == 'kezdo') {
+		// in
+		document.querySelector('#btn-kezdo-' + column.WebId).addEventListener('click', function () {
+			rovat.className = 'current';
+			document.querySelector('[data-position="current"]').className = 'left';
+
+			// out
+			$(backButton).unbind("click");
+			backButton.href ="#";
+			backButton.addEventListener('click', function () {
+				rovat.className = 'right';
+				document.querySelector('[data-position="current"]').className = 'current';
+			});
+		});
+	}
+	else if (backLink == 'cikkek') {
+		// in
+
+		// out
+	}
+	else if (backLink == 'close') {
+		// exit
+		document.querySelector('#btn-' + column.WebId + '-close').addEventListener('click', function () {
+			rovat.className = 'right';
+			document.querySelector('[data-position="current"]').className = 'current';
+		});
+	}
+	
+}
+
+function renderColumnInColumns(column, backLink){
 	// insert field
 	var field = '<section id="rovatok-'+ column.WebId + '" role="region" data-position="right">'
 		+ '<header class="fixed">'
-		+ '<a id="btn-' + column.WebId + '-back" href="#drawer"><span class="icon icon-back">back</span></a>'
+		+ '<a id="btn-' + column.WebId + '-back" href="#"><span class="icon icon-back">back</span></a>'
 		+ '<menu type="toolbar"><a id="btn-' + column.WebId + '-close" href="#">'
 		+ '<span class="icon icon-close">close'
 		+ '</span></a></menu>'
@@ -292,25 +368,14 @@ function renderColumnInColumns(column){
 	var $list = $(document.getElementsByName("rovatok"));
 	$list.append('<li><a href="#" id="btn-rovatok-'+column.WebId+'">'+column.Name+'</a></li>')
 	
-	// bind click event
-	document.querySelector('#btn-rovatok-' + column.WebId).addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'current';
-		document.querySelector('[data-position="current"]').className = 'left';
-	});
-	document.querySelector('#btn-'+ column.WebId +'-back').addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'right';
-		document.querySelector('[data-position="current"]').className = 'current';
-	});
-	document.querySelector('#btn-'+ column.WebId +'-close').addEventListener ('click', function () {
-		document.querySelector('#rovatok-' + column.WebId).className = 'right';
-		document.querySelector('[data-position="current"]').className = 'current';
-	});
+	bindColumnLinks(column, backLink);
+	bindColumnLinks(column, 'close');
 }
 
 function loadColumnsContent(columns){
 	// TODO: cache and empty check
 	$.each(columns.Data, function(key, value){
-		renderColumnInColumns(value);
+		renderColumnInColumns(value, 'rovatok');
 	});
 }
 
@@ -320,7 +385,6 @@ function loadColumns(){
 
 	// get data
     $.getJSON(url.columnsUrl(), function () {
-        console.log('success');
     })
         .done(function (data) {
             loadColumnsContent(data);
@@ -329,6 +393,129 @@ function loadColumns(){
             console.log('error');
         })
         .always(function () {
-            console.log('complete');
+        });
+}
+
+// ********************************************
+// **** COVER
+// ********************************************
+function renderColumnLeads(article) {
+	// TODO: check empty
+
+	var image = '';
+	if (!isEmpty(article.DefaultImageId)) {
+		image = '<aside>' + page.getArticleImageListView(article) + '</aside>';
+	}
+
+	var content = '<header style="cursor:pointer" id="btn-kezdo-' + article.Column.WebId + '">' + article.Column.Name + '</header> <ul> <li>'
+					+ ' <a href="#">' + image
+					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
+					+ ' </li> </ul>';
+
+	var $columnLeads = $(document.getElementById("rovat-vezeto"));
+	$columnLeads.append(content);
+
+	// bind link
+	bindColumnLinks(article.Column, 'kezdo');
+}
+
+function renderRightArticles(article) {
+	// TODO: check empty
+
+	var image = '';
+	if (!isEmpty(article.DefaultImageId)) {
+		image = '<aside>' + page.getArticleImageListView(article) + '</aside>';
+	}
+
+	var content = '<ul> <li> <a href="#">'
+					+ image
+					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
+					+ ' </li> </ul>';
+
+	var $rightArticles = $(document.getElementById("jobb"));
+	$rightArticles.append(content);
+}
+
+function loadCoverContent(cover) {
+	// TODO: cache and empty check
+
+	// draw only after documnet ready
+	$(document).ready(function () {
+		$.each(cover.LeadArticles, function (key, value) {
+			// renderColumnInColumns(value);
+		});
+
+		$.each(cover.RightArticles, function (key, value) {
+			renderRightArticles(value);
+		});
+
+		$.each(cover.ColumnLeads, function (key, value) {
+			renderColumnLeads(value);
+		});
+
+		$.each(cover.Rates, function (key, value) {
+			// renderColumnInColumns(value);
+		});
+
+		$.each(cover.Weathers, function (key, value) {
+			// renderColumnInColumns(value);
+		});
+	});
+}
+
+function loadCover() {
+	// TODO: Cache
+
+	// get data
+	$.getJSON(url.coverUrl(), function () {
+		// show loading bar
+		setActivity('home-activity', true);
+	})
+        .done(function (data) {
+        	loadCoverContent(data);
+        	// hide loading bar
+        	setActivity('home-activity', false);
+
+        })
+        .fail(function () {
+        	console.log('error');
+        })
+        .always(function () {
+        });
+}
+
+// ********************************************
+// **** LATEST
+// ********************************************
+function renderLatestArticles(article) {
+	var content = '<ul> <li> <a href="#">'
+					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
+					+ ' </li> </ul>';
+
+	var $latestArticles = $(document.getElementById("friss"));
+	$latestArticles.append(content);
+}
+
+function loadLatestContent(latestArticles) {
+	// TODO: cache and empty check
+	$.each(latestArticles.Data, function (key, value) {
+		// TODO: server side error, duplicated record
+		if (key < 5) {
+			renderLatestArticles(value);
+		}
+	});
+}
+
+function loadLatest() {
+	// get data
+	$.getJSON(url.latestArticlesUrl(), function () {
+	})
+        .done(function (data) {
+        	loadLatestContent(data)
+        })
+        .fail(function () {
+        	console.log('error');
+        })
+        .always(function () {
         });
 }
