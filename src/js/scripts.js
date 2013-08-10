@@ -57,6 +57,11 @@ var url = new function () {
 	this.coverUrl = function () {
 		return apiUrl + 'Cover.json?apikey=' + apiKey;
 	};
+
+	// Get lead article image url
+	this.leadImageUrl = function (article) {
+		return 'http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover;
+	}
 };
 
 // Page class
@@ -75,7 +80,8 @@ var page = new function () {
     
 	// Get article image
     this.getArticleImage = function (article) {
-        return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
+    	return '<img src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '">';
+        //return '<img class="framed" src="http://img8.hvg.hu/image.aspx?id=' + article.DefaultImageId + '&amp;view=' + imageViews.Cover + '" align="left">';
     };
 
     // Get article image(latest)
@@ -435,8 +441,12 @@ function renderRightArticles(article) {
 	$rightArticles.find('ul').append(content);
 }
 
-function renderLeadArticles(value) {
-
+function renderLeadArticles(article) {
+	var $lead = $(document.getElementById("vezeto"));
+	var content = '<a href="#">'
+		+ '<div style="width:320px; height:195px; background-image:url(\'' + url.leadImageUrl(article) + '\');">'
+		+ '<p class="imgtext">' + article.Caption + '<p></div> </a>';
+	$lead.append(content);
 }
 
 function loadCoverContent(cover) {
