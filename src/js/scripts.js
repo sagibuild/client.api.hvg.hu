@@ -426,13 +426,13 @@ function renderRightArticles(article) {
 		image = '<aside>' + page.getArticleImageListView(article) + '</aside>';
 	}
 
-	var content = '<ul> <li> <a href="#">'
+	var content = '<li> <a href="#">'
 					+ image
 					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
-					+ ' </li> </ul>';
+					+ ' </li>';
 
 	var $rightArticles = $(document.getElementById("jobb"));
-	$rightArticles.append(content);
+	$rightArticles.find('ul').append(content);
 }
 
 function renderLeadArticles(value) {
@@ -534,12 +534,12 @@ function renderClock(dateTime) {
 }
 
 function renderLatestArticles(article) {
-	var content = '<ul> <li> <a href="#"><aside>' + renderClock(article.ReleaseDate) + '</aside>'
+	var content = '<li> <a href="#"><aside>' + renderClock(article.ReleaseDate) + '</aside>'
 					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
-					+ ' </li> </ul>';
+					+ ' </li>';
 
 	var $latestArticles = $(document.getElementById("friss"));
-	$latestArticles.append(content);
+	$latestArticles.find('ul').append(content);
 }
 
 function loadLatestContent(latestArticles) {
