@@ -379,7 +379,6 @@ function loadColumnsContent(columns){
 	});
 }
 
-// Load columns
 function loadColumns(){
 	// TODO: cache
 
@@ -436,13 +435,17 @@ function renderRightArticles(article) {
 	$rightArticles.append(content);
 }
 
+function renderLeadArticles(value) {
+
+}
+
 function loadCoverContent(cover) {
 	// TODO: cache and empty check
 
 	// draw only after documnet ready
 	$(document).ready(function () {
 		$.each(cover.LeadArticles, function (key, value) {
-			// renderColumnInColumns(value);
+			renderLeadArticles(value);
 		});
 
 		$.each(cover.RightArticles, function (key, value) {
@@ -487,8 +490,51 @@ function loadCover() {
 // ********************************************
 // **** LATEST
 // ********************************************
+
+function renderClock(dateTime) {
+	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+	var digits = {};
+	var positions = ['h1', 'h2', ':', 'm1', 'm2'];
+	var currentTime = new Date(dateTime);
+	var now = [currentTime.getHours().padLeft(), currentTime.getMinutes().padLeft()].join("");
+
+	var clock = '<div class="clock"><div class="display"><div class="digits">';
+	$.each(positions, function () {
+		if (this == ':') {
+			clock = clock + '<div class="dots"></div>';
+		}
+		else {
+			var n = digit_to_name[0];
+			if (this == 'h1') {
+				n = digit_to_name[now[0]];
+			}
+			else if (this == 'h2') {
+				n = digit_to_name[now[1]];
+			}
+			else if (this == 'm1') {
+				n = digit_to_name[now[2]];
+			}
+			else if (this == 'm2') {
+				n = digit_to_name[now[3]];
+			}
+
+			var pos = '<div class="' + n + '">';
+			for (var i = 1; i < 8; i++) {
+				pos = pos + '<span class="d' + i + '"></span>';
+			}
+
+			pos = pos + '</div>';
+			clock = clock + pos;
+		}
+	});
+
+	clock = clock + '</div></div></div>';
+
+	return clock;
+}
+
 function renderLatestArticles(article) {
-	var content = '<ul> <li> <a href="#">'
+	var content = '<ul> <li> <a href="#"><aside>' + renderClock(article.ReleaseDate) + '</aside>'
 					+ '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
 					+ ' </li> </ul>';
 
