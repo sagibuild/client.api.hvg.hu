@@ -1,0 +1,19 @@
+
+#vezeto li{
+	height:195px; 
+}
+
+#vezeto li div{
+	width:320px;
+	height:195px; 
+	position: relative;
+}
+
+span.imgtext {
+	background-color: white;
+	padding: 5px;
+	vertical-align: bottom;
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}

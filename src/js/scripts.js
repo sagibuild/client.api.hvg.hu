@@ -442,11 +442,12 @@ function renderRightArticles(article) {
 }
 
 function renderLeadArticles(article) {
+    // TODO: a beégetett értékeket kiszedni
 	var $lead = $(document.getElementById("vezeto"));
-	var content = '<a href="#">'
-		+ '<div style="width:320px; height:195px; background-image:url(\'' + url.leadImageUrl(article) + '\');">'
-		+ '<p class="imgtext">' + article.Caption + '<p></div> </a>';
-	$lead.append(content);
+	var content = '<li><a href="#">'
+		+ '<div style="background-image:url(\'' + url.leadImageUrl(article) + '\');">'
+		+ '<span class="imgtext">' + article.Caption + '<span></div> </a></li>';
+	$lead.find('ul').append(content);
 }
 
 function loadCoverContent(cover) {
