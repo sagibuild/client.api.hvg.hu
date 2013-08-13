@@ -218,30 +218,7 @@ function loadColumnLatestContent(data) {
     Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
 }
 
-// Load column latest data
-function loadColumnLatest(column) {
-    // load from cache
-    if (Storage.isEnabled) {
-        var cache = Storage.getItem(app.getArticlesCacheKey());
-        if (!isEmpty(cache)) {
-            loadColumnLatestContent(JSON.parse(cache));
-        }
-    }
 
-    // get data
-    $.getJSON(url.articleLatestUrl(column), function () {
-        console.log('success');
-    })
-        .done(function (data) {
-            loadColumnLatestContent(data);
-        })
-        .fail(function () {
-            console.log('error');
-        })
-        .always(function () {
-            console.log('complete');
-        });
-}
 
 // Load column data to page
 function loadColumnContent(data) {
@@ -284,7 +261,6 @@ function loadColumn() {
 // FFOS
 // **********************************************
 // **********************************************
-
 function setActivity(id, isVisible){
 	var activity = $('#'+id);
 	if (isVisible){
@@ -345,7 +321,6 @@ function bindColumnLinks(column, backLink) {
 			document.querySelector('[data-position="current"]').className = 'current';
 		});
 	}
-	
 }
 
 function renderColumnInColumns(column, backLink){
@@ -398,6 +373,51 @@ function loadColumns(){
             console.log('error');
         })
         .always(function () {
+        });
+}
+
+// Load column latest article data to page
+function loadColumnLatestContent(data) {
+    if (isEmpty(data.Data)) {
+        console.log('empty data');
+        return;
+    }
+
+    var columnContent = $('#rovat .content');
+    var articles = '';
+    $.each(data.Data, function (index, item) {
+        articles = articles + page.renderArticle(item);
+    });
+    columnContent.html(articles);
+
+    //bindingArticleClick();
+
+    // save to cache
+    Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
+}
+
+// Load column latest data
+function loadColumnLatest(column) {
+    // load from cache
+    if (Storage.isEnabled) {
+        var cache = Storage.getItem(app.getArticlesCacheKey());
+        if (!isEmpty(cache)) {
+            loadColumnLatestContent(JSON.parse(cache));
+        }
+    }
+
+    // get data
+    $.getJSON(url.articleLatestUrl(column), function () {
+        console.log('success');
+    })
+        .done(function (data) {
+            loadColumnLatestContent(data);
+        })
+        .fail(function () {
+            console.log('error');
+        })
+        .always(function () {
+            console.log('complete');
         });
 }
 
@@ -467,13 +487,12 @@ function loadCoverContent(cover) {
 			renderColumnLeads(value);
 		});
 
+        /* actually unused
 		$.each(cover.Rates, function (key, value) {
-			// renderColumnInColumns(value);
 		});
 
 		$.each(cover.Weathers, function (key, value) {
-			// renderColumnInColumns(value);
-		});
+		});*/
 	});
 }
 
@@ -489,7 +508,6 @@ function loadCover() {
         	loadCoverContent(data);
         	// hide loading bar
         	setActivity('home-activity', false);
-
         })
         .fail(function () {
         	console.log('error');
@@ -501,7 +519,6 @@ function loadCover() {
 // ********************************************
 // **** LATEST
 // ********************************************
-
 function renderClock(dateTime) {
 	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
 	var digits = {};
