@@ -1,26 +1,26 @@
 #vezeto a{
-	margin-left:0px; 
+	margin: 0rem; 
 }
 
 #vezeto li{
-	height:195px; 
+	height: 20rem; 
 }
 
 #vezeto li div{
-	width:320px;
-	height:195px; 
+	height:20rem; 
 	position: relative;
+	background-size: cover;
 }
 
 span.imgtext {
 	background-color: white;
-	padding: 5px;
+	padding: 0.5rem;
 	vertical-align: bottom;
 	position: absolute;
-	bottom: 10px;
-	left: 10px;
+	bottom: 1rem;
+	left: 1rem;
 }
 
-section[role="region"] > .content [data-type="list"] header {
-	padding: 1rem 1.5rem 0.5rem 1.5rem;
+section[role="region"] > .content [data-type="list"] {
+	margin-top: 1.5rem;
 }
