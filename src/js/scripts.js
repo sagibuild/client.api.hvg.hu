@@ -275,7 +275,6 @@ function setActivity(id, isVisible){
 // **** COLUMN
 // ********************************************
 function bindColumnLinks(column, backLink) {
-
 	var backButton = document.querySelector('#btn-' + column.WebId + '-back');
 	var rovat = document.querySelector('#rovatok-' + column.WebId);
 	// bind click event
@@ -284,13 +283,17 @@ function bindColumnLinks(column, backLink) {
 		document.querySelector('#btn-rovatok-' + column.WebId).addEventListener('click', function () {
 			rovat.className = 'current';
 			document.querySelector('[data-position="current"]').className = 'left';
+            loadColumnLatest(column.WebId);
 
-			// out
+			// bind back button
 			$(backButton).unbind("click");
 			backButton.href = "#drawer";
 			backButton.addEventListener('click', function () {
-				rovat.className = 'right';
+				// go back
+                rovat.className = 'right';
 				document.querySelector('[data-position="current"]').className = 'current';
+                // clear content(speed improvement)
+                clearColumn('rovatok-' + column.WebId);
 			});
 		});	
 	}
@@ -299,14 +302,18 @@ function bindColumnLinks(column, backLink) {
 		document.querySelector('#btn-kezdo-' + column.WebId).addEventListener('click', function () {
 			rovat.className = 'current';
 			document.querySelector('[data-position="current"]').className = 'left';
+            loadColumnLatest(column.WebId);
 
-			// out
+			// bind back button
 			$(backButton).unbind("click");
 			backButton.href ="#";
 			backButton.addEventListener('click', function () {
+                // go back
 				rovat.className = 'right';
 				document.querySelector('[data-position="current"]').className = 'current';
-			});
+                // clear article(speed improvement)
+			     clearColumn('rovatok-' + column.WebId);
+            });
 		});
 	}
 	else if (backLink == 'cikkek') {
@@ -319,6 +326,8 @@ function bindColumnLinks(column, backLink) {
 		document.querySelector('#btn-' + column.WebId + '-close').addEventListener('click', function () {
 			rovat.className = 'right';
 			document.querySelector('[data-position="current"]').className = 'current';
+            // clear content(speed improvement)
+            clearColumn('rovatok-' + column.WebId);
 		});
 	}
 }
@@ -334,12 +343,10 @@ function renderColumnInColumns(column, backLink){
 		+ '<h1>'+ column.Name+ '</h1>'
 		+ '</header>'
 		+ ' <article class="content scrollable header">'
-		+ ' <header><h2>Normal</h2></header>'
-		+ ' <div>'
-        +	' <button>Default</button>'
-        +	' <button class="recommend">Recommend</button>'
-        +	' <button class="danger">Danger</button>'
-		+ ' </div>'
+		+ ' <progress class="pack-activity light" id="column-activity" value="0" max="100"></progress>'
+		+ ' <section data-type="list">'
+        +	' <ul></ul>'
+		+ ' </section>'
 		+ ' </article>'
 		+ ' </section>';
 	var $body = $(document.body);
@@ -376,6 +383,20 @@ function loadColumns(){
         });
 }
 
+function renderColumnArticles(article){
+    var image = '';
+    if (!isEmpty(article.DefaultImageId)) {
+        image = '<aside>' + page.getArticleImageListView(article) + '</aside>';
+    }
+
+    var content = '<li> <a href="#">'
+                    + image
+                    + '  <p>' + article.Caption + '</p> <p>' + article.Lead + '</p> </a>'
+                    + ' </li>';
+
+    return content;
+}
+
 // Load column latest article data to page
 function loadColumnLatestContent(data) {
     if (isEmpty(data.Data)) {
@@ -383,14 +404,11 @@ function loadColumnLatestContent(data) {
         return;
     }
 
-    var columnContent = $('#rovat .content');
     var articles = '';
     $.each(data.Data, function (index, item) {
-        articles = articles + page.renderArticle(item);
+        articles = articles + renderColumnArticles(item);
     });
-    columnContent.html(articles);
-
-    //bindingArticleClick();
+    $(document.getElementById('rovatok-' + app.Column)).find('ul').html(articles);
 
     // save to cache
     Storage.setItem(app.getArticlesCacheKey(), JSON.stringify(data));
@@ -398,6 +416,8 @@ function loadColumnLatestContent(data) {
 
 // Load column latest data
 function loadColumnLatest(column) {
+    app.Column = column;
+
     // load from cache
     if (Storage.isEnabled) {
         var cache = Storage.getItem(app.getArticlesCacheKey());
@@ -419,6 +439,10 @@ function loadColumnLatest(column) {
         .always(function () {
             console.log('complete');
         });
+}
+
+function clearColumn(columnId){
+    $(document.getElementById(columnId)).find('ul').html('');
 }
 
 // ********************************************
